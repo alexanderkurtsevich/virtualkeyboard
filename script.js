@@ -18,9 +18,11 @@ class Keyboard {
 
         this.language = 'eng';
         this.capsLock = false;
+
+        this.pressed = new Set();
     }
 
-    create() {
+    init() {
 
         //Create textarea
         let textarea = document.createElement('textarea');
@@ -38,6 +40,18 @@ class Keyboard {
         this.elements.keys = document.querySelectorAll('.keyboard__key');
         this.elements.textarea = document.querySelector('textarea')
 
+        //Add EeventListeners
+        window.addEventListener('keydown', (event) => {
+            this._eventHandler(event)
+        })
+        window.addEventListener('keyup', (event) => {
+            this._eventHandler(event)
+        })
+
+        this.elements.textarea.addEventListener('keydown', () => {
+            event.preventDefault()
+        })
+
     }
 
     _createKeys() {
@@ -52,7 +66,16 @@ class Keyboard {
         });
 
         for (let i = 0; i < this.configs.lowEngKeys.length; i++) {
+            //Put english letters in key
             this.elements.keys[i].innerHTML = this.configs.lowEngKeys[i];
+
+            //Add mouse events for each key
+            this.elements.keys[i].addEventListener('mousedown', (event) => {
+                this._eventHandler(event)
+            })
+            this.elements.keys[i].addEventListener('mouseup', (event) => {
+                this._eventHandler(event)
+            })
         }
 
         return container
@@ -99,48 +122,108 @@ class Keyboard {
         };
     }
 
+    _eventHandler(event) {
+        switch (event.type) {
+            case 'keydown': {
+                let key = document.querySelector(`.${event.code}`);
+                key.classList.add('keyboard__key_active');
+
+                switch (event.code) {
+                    case 'ShiftLeft': {
+                        if (!this.pressed.has('ShiftLeft')) {
+                            this._capsLockToggle()
+                        }
+                        break;
+                    }
+
+                    case 'CapsLock': {
+                        this._capsLockToggle()
+                        break;
+                    }
+                    case 'Space': {
+                        this.elements.textarea.value += ' ';
+                        break;
+                    }
+                    case 'Backspace': {
+                        this.elements.textarea.value = this.elements.textarea.value.slice(0, -1)
+                        break;
+                    }
+                    case 'Enter': {
+                        this.elements.textarea.value += '\n';
+                        break
+                    }
+                    default: {
+                        if (key.innerHTML.length == 1)
+                            this.elements.textarea.value += key.innerHTML;
+                        break;
+                    }
+                }
+
+                this.pressed.add(event.code)
+                if (this.pressed.has('ShiftLeft') && this.pressed.has('ControlLeft')) {
+                    this._languageToggle();
+                }
+
+                break;
+            }
+
+            case 'keyup': {
+                let key = document.querySelector(`.${event.code}`);
+                key.classList.remove('keyboard__key_active')
+                this.pressed.delete(event.code)
+
+                if (event.code == 'ShiftLeft') {
+                    this._capsLockToggle()
+                }
+                break;
+            }
+
+            case 'mousedown': {
+                let key = event.target;
+                key.classList.add('keyboard__key_active')
+
+                switch (event.target.classList[0]) {
+                    case 'CapsLock': {
+                        this._capsLockToggle()
+                    }
+                    case 'Space': {
+                        this.elements.textarea.value += ' ';
+                        break;
+                    }
+                    case 'Enter': {
+                        this.elements.textarea.value += '\n';
+                        break
+                    }
+                    case 'Backspace': {
+                        this.elements.textarea.value = this.elements.textarea.value.slice(0, -1)
+                        break;
+                    }
+                    case 'ShiftLeft': {
+                        this._capsLockToggle()
+                    }
+                    default: {
+                        if (key.innerHTML.length == 1)
+                            this.elements.textarea.value += key.innerHTML;
+                        break;
+                    }
+                }
+                break
+            }
+
+            case 'mouseup': {
+                let key = event.target;
+                key.classList.remove('keyboard__key_active')
+
+                if (event.target.classList[0] == 'ShiftLeft') {
+                    this._capsLockToggle()
+                }
+                break;
+            }
+
+        }
+    }
 }
 
-
-
-
-
-
-
-
-
 let keyboard = new Keyboard();
+keyboard.init()
 
-keyboard.create()
-console.log(keyboard)
-
-let pressed = new Set();
-
-window.addEventListener('keydown', () => {
-    let key = document.querySelector(`.${event.code}`);
-    key.classList.add('keyboard__key_active')
-
-    if (event.code == 'ShiftLeft' && !pressed.has('ShiftLeft')) {
-        keyboard._capsLockToggle()
-    }
-
-    if (event.code == 'CapsLock') {
-        keyboard._capsLockToggle()
-    }
-
-    pressed.add(event.code)
-    if (pressed.has('ShiftLeft') && pressed.has('ControlLeft')) {
-        keyboard._languageToggle();
-    }
-})
-
-window.addEventListener('keyup', () => {
-    let key = document.querySelector(`.${event.code}`);
-    key.classList.remove('keyboard__key_active')
-    pressed.delete(event.code)
-
-    if (event.code == 'ShiftLeft') {
-        keyboard._capsLockToggle()
-    }
-
-})
