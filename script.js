@@ -76,7 +76,7 @@ class Keyboard {
             }
         }
         else {
-            if (this.language = 'eng') {
+            if (this.language == 'eng') {
                 this._changeKeys(this.configs.lowEngKeys);
                 this.capsLock = false;
             }
@@ -116,27 +116,21 @@ console.log(keyboard)
 
 let pressed = new Set();
 
-
 window.addEventListener('keydown', () => {
     let key = document.querySelector(`.${event.code}`);
     key.classList.add('keyboard__key_active')
 
-    pressed.add(event.code)
-    if (pressed.has('ShiftLeft') && pressed.has('ControlLeft')) {
-        keyboard._languageToggle();
+    if (event.code == 'ShiftLeft' && !pressed.has('ShiftLeft')) {
+        keyboard._capsLockToggle()
     }
 
     if (event.code == 'CapsLock') {
         keyboard._capsLockToggle()
     }
 
-    if (document.querySelector(`.${event.code}`).innerHTML.length == 1) {
-        keyboard.text += document.querySelector(`.${event.code}`).innerHTML
-        keyboard.elements.textarea.value = keyboard.text
-    }
-
-    if (event.code == 'Backspace'){
-        keyboard.elements.textarea.value = keyboard.text.slice(0, -1)
+    pressed.add(event.code)
+    if (pressed.has('ShiftLeft') && pressed.has('ControlLeft')) {
+        keyboard._languageToggle();
     }
 })
 
@@ -145,5 +139,8 @@ window.addEventListener('keyup', () => {
     key.classList.remove('keyboard__key_active')
     pressed.delete(event.code)
 
+    if (event.code == 'ShiftLeft') {
+        keyboard._capsLockToggle()
+    }
 
 })
