@@ -6,8 +6,7 @@ body {
 textarea {
     width: 875px;
     height: 250px;
-    background-color: #cfc3be;
-    border-radius: 6px;
+    background-color: #d0d0d0;
     resize: none;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 18px;
@@ -44,7 +43,7 @@ margin: 0 auto;
 }
 
 .keyboard__key_active {
-    background-color: #cfc3be !important;
+    background-color: #b1a1a1 !important;
     border-radius: 6px;
 }
 
