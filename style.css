@@ -69,6 +69,11 @@ margin: 0 auto;
 
 .ShiftLeft {
     width: 100px;
+    background-color: #206fff;
+}
+
+.ControlLeft {
+    background-color: #206fff;
 }
 
 .ShiftRight {
