@@ -46,6 +46,9 @@ class Keyboard {
     window.addEventListener('mouseup', (event) => {
       this.eventKeyUp(event);
     });
+    window.addEventListener('mouseout', (event) => {
+      this.eventMouseOut(event);
+    });
     this.elements.textarea.addEventListener('keydown', (event) => {
       event.preventDefault();
     });
@@ -179,6 +182,10 @@ class Keyboard {
     }
 
     this.pressed.delete(event.code);
+  }
+
+  eventMouseOut(event) {
+    event.target.classList.remove('keyboard__key_active');
   }
 }
 
