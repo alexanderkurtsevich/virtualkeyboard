@@ -1,0 +1,24 @@
+{
+  "name": "virtual-keyboard",
+  "version": "1.0.0",
+  "description": "Virtual Keyboard task",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexanderkurtsevich/virtualkeyboard.git"
+  },
+  "author": "Alexander Kurtsevich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexanderkurtsevich/virtualkeyboard/issues"
+  },
+  "homepage": "https://github.com/alexanderkurtsevich/virtualkeyboard/",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  }
+}

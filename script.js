@@ -47,7 +47,7 @@ class Keyboard {
       this.eventKeyUp(event);
     });
     window.addEventListener('mouseout', (event) => {
-      this.eventMouseOut(event);
+      event.target.classList.remove('keyboard__key_active');
     });
     this.elements.textarea.addEventListener('keydown', (event) => {
       event.preventDefault();
@@ -85,31 +85,35 @@ class Keyboard {
   }
 
   capsLockToggle() {
+    const languages = {
+      ENG: 'eng',
+      RUS: 'rus',
+    };
     if (this.capsLock === false) {
-      if (this.language === 'eng') {
+      if (this.language === languages.ENG) {
         this.changeKeys(this.configs.upEngKeys);
-        this.capsLock = true;
       } else {
         this.changeKeys(this.configs.upRuKeys);
-        this.capsLock = true;
       }
-    } else if (this.language === 'eng') {
+    } else if (this.language === languages.ENG) {
       this.changeKeys(this.configs.lowEngKeys);
-      this.capsLock = false;
     } else {
       this.changeKeys(this.configs.lowRuKeys);
-      this.capsLock = false;
     }
+    this.capsLock = this.capsLock === false;
   }
 
   languageToggle() {
-    if (this.language === 'eng') {
+    const languages = {
+      ENG: 'eng',
+      RUS: 'rus',
+    };
+    if (this.language === languages.ENG) {
       this.changeKeys(this.configs.lowRuKeys);
-      this.language = 'rus';
     } else {
       this.changeKeys(this.configs.lowEngKeys);
-      this.language = 'eng';
     }
+    this.language = this.language === languages.ENG ? languages.RUS : languages.ENG;
     localStorage.setItem('language', this.language);
   }
 
@@ -182,10 +186,6 @@ class Keyboard {
     }
 
     this.pressed.delete(event.code);
-  }
-
-  eventMouseOut(event) {
-    event.target.classList.remove('keyboard__key_active');
   }
 }
 
