@@ -1,3 +1,7 @@
+const languages = {
+  ENG: 'eng',
+  RUS: 'rus',
+};
 class Keyboard {
   constructor() {
     this.elements = {
@@ -14,7 +18,7 @@ class Keyboard {
       keyClasses: ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', 'CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', 'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ArrowUp', 'ShiftRight', 'ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'ControlRight'],
     };
 
-    this.language = 'eng';
+    this.language = languages.ENG;
     this.capsLock = false;
 
     this.pressed = new Set();
@@ -65,7 +69,7 @@ class Keyboard {
       this.elements.keys.push(key);
     });
 
-    if (localStorage.language === 'eng' || localStorage.language === undefined) {
+    if (localStorage.language === languages.ENG || localStorage.language === undefined) {
       for (let i = 0; i < this.configs.lowEngKeys.length; i += 1) {
         this.elements.keys[i].innerHTML = this.configs.lowEngKeys[i];
       }
@@ -85,10 +89,6 @@ class Keyboard {
   }
 
   capsLockToggle() {
-    const languages = {
-      ENG: 'eng',
-      RUS: 'rus',
-    };
     if (this.capsLock === false) {
       if (this.language === languages.ENG) {
         this.changeKeys(this.configs.upEngKeys);
@@ -104,10 +104,6 @@ class Keyboard {
   }
 
   languageToggle() {
-    const languages = {
-      ENG: 'eng',
-      RUS: 'rus',
-    };
     if (this.language === languages.ENG) {
       this.changeKeys(this.configs.lowRuKeys);
     } else {
@@ -148,23 +144,19 @@ class Keyboard {
         case 'Enter': {
           this.elements.textarea.value += '\n';
           break;
-        } case 'ShiftLeft': {
-          if (!this.pressed.has('ShiftLeft')) {
-            this.capsLockToggle();
-          }
-          break;
         }
-        default: {
-          if (key.innerHTML.length === 1) { this.elements.textarea.value += key.innerHTML; }
-          break;
-        }
+        default:
       }
+
+      if (key.classList[0] === 'ShiftLeft' && !this.pressed.has('ShiftLeft')) { this.capsLockToggle(); }
 
       this.pressed.add(event.code);
 
       if (this.pressed.has('ShiftLeft') && this.pressed.has('ControlLeft')) {
         this.languageToggle();
       }
+
+      if (key.innerHTML.length === 1) { this.elements.textarea.value += key.innerHTML; }
     }
   }
 
